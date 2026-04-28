@@ -1,0 +1,19 @@
+.auth-page { min-height: calc(100vh - 70px); display: flex; align-items: center; justify-content: center; padding: 2rem; position: relative; }
+.auth-page .bg-grid { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(0,229,255,0.02) 50px, rgba(0,229,255,0.02) 51px), repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0,229,255,0.02) 50px, rgba(0,229,255,0.02) 51px); pointer-events: none; }
+.auth-card { width: 100%; max-width: 450px; padding: 3rem; position: relative; z-index: 1; }
+.auth-card h1 { font-size: 1.8rem; text-align: center; margin-bottom: 0.5rem; }
+.auth-card .auth-subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-family: var(--font-heading); font-size: 0.75rem; letter-spacing: 2px; }
+.auth-card .auth-status { font-family: var(--font-heading); font-size: 0.8rem; text-align: center; margin-bottom: 1rem; color: var(--accent-green); letter-spacing: 1px; display: none; }
+.auth-card .auth-status.show { display: block; }
+.auth-card .auth-status.error { color: var(--accent-red); }
+.auth-card .divider { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin: 1.5rem 0; position: relative; }
+.auth-card .divider::before, .auth-card .divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: var(--glass-border); }
+.auth-card .divider::before { left: 0; }
+.auth-card .divider::after { right: 0; }
+.auth-card .auth-footer { text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-secondary); }
+.auth-card .auth-footer a { color: var(--accent-cyan); font-weight: 600; }
+.password-strength { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+.password-strength .strength-fill { height: 100%; width: 0; transition: width 0.3s, background 0.3s; border-radius: 2px; }
+.strength-weak { background: var(--accent-red); }
+.strength-medium { background: var(--accent-amber); }
+.strength-strong { background: var(--accent-green); }

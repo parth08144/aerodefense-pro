@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/pages.css">
+<div class="wishlist-page animate-fade-in">
+    <h1 class="text-cyan" style="margin-bottom:2rem"><i class="fa-solid fa-heart"></i> WISHLIST</h1>
+    <% if (items.length === 0) { %>
+    <div class="cart-empty"><i class="fa-solid fa-heart-crack"></i><h2>WISHLIST EMPTY</h2><p class="text-muted">Save assets for later.</p><a href="/catalog" class="btn btn-primary" style="margin-top:1rem">BROWSE CATALOG</a></div>
+    <% } else { %>
+    <div class="wishlist-grid">
+        <% items.forEach(item => { %>
+        <div class="product-card glass-panel">
+            <div class="card-image">
+                <img src="<%= item.image_url %>" alt="<%= item.name %>" style="width:100%;height:100%;object-fit:cover;">
+                <div class="status-badge"><span class="badge <%= item.status==='available'?'badge-green':'badge-amber' %>"><%= item.status.toUpperCase() %></span></div>
+            </div>
+            <div class="card-body">
+                <h3><a href="/product/<%= item.slug %>"><%= item.name %></a></h3>
+                <div class="card-manufacturer"><%= item.manufacturer %></div>
+                <div class="card-price">$<%= item.price.toLocaleString() %></div>
+                <div class="card-actions">
+                    <button class="btn btn-primary btn-sm" onclick="addToCart(<%= item.product_id %>)"><i class="fa-solid fa-crosshairs"></i> ADD TO CART</button>
+                    <button class="btn btn-danger btn-sm" onclick="removeWish(<%= item.product_id %>)"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+    <% } %>
+</div>
+<script>
+function addToCart(pid) {
+    fetch('/api/cart', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({product_id:pid}) })
+    .then(r=>r.json()).then(d => { if(d.success) { showToast('Added to cart!','success'); updateCartBadge(d.cartCount); }});
+}
+function removeWish(pid) {
+    fetch('/api/wishlist/'+pid, { method:'DELETE' }).then(r=>r.json()).then(d => { if(d.success) location.reload(); });
+}
+</script>
+<%- include('partials/footer') %>

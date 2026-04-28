@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/pages.css">
+<div class="cart-page animate-fade-in">
+    <h1 class="text-cyan"><i class="fa-solid fa-crosshairs"></i> ARSENAL CART</h1>
+    <% if (items.length === 0) { %>
+    <div class="cart-empty">
+        <i class="fa-solid fa-box-open"></i>
+        <h2>ARSENAL EMPTY</h2>
+        <p class="text-muted">No assets loaded. Browse the catalog to add items.</p>
+        <a href="/catalog" class="btn btn-primary" style="margin-top:1.5rem"><i class="fa-solid fa-crosshairs"></i> BROWSE CATALOG</a>
+    </div>
+    <% } else { %>
+    <div class="cart-items" id="cartItems">
+        <% items.forEach(item => { %>
+        <div class="cart-item glass-panel" data-id="<%= item.id %>">
+            <div class="item-img"><i class="fa-solid <%= item.name.includes('F-') || item.name.includes('Su-') || item.name.includes('J-') ? 'fa-jet-fighter' : item.name.includes('AIM') || item.name.includes('AGM') || item.name.includes('BGM') ? 'fa-rocket' : 'fa-shield-halved' %>"></i></div>
+            <div class="item-info"><h3><a href="/product/<%= item.slug %>"><%= item.name %></a></h3><p><%= item.manufacturer %></p></div>
+            <div class="item-price">$<%= item.price.toLocaleString() %></div>
+            <div class="item-qty">
+                <button onclick="updateQty(<%= item.id %>, <%= item.quantity - 1 %>)">−</button>
+                <span><%= item.quantity %></span>
+                <button onclick="updateQty(<%= item.id %>, <%= item.quantity + 1 %>)">+</button>
+            </div>
+            <div class="item-remove" onclick="removeItem(<%= item.id %>)"><i class="fa-solid fa-trash"></i></div>
+        </div>
+        <% }) %>
+    </div>
+    <div class="cart-summary glass-panel">
+        <h3>ORDER SUMMARY</h3>
+        <div class="summary-line"><span>Subtotal</span><span>$<%= total.toLocaleString() %></span></div>
+        <div class="summary-line"><span>Tactical Insurance</span><span>$<%= Math.round(total * 0.02).toLocaleString() %></span></div>
+        <div class="summary-line"><span>Delivery</span><span class="text-green">CLASSIFIED</span></div>
+        <div class="summary-line total"><span>Total</span><span>$<%= Math.round(total * 1.02).toLocaleString() %></span></div>
+        <a href="/checkout" class="btn btn-amber btn-block btn-lg" style="margin-top:1.5rem"><i class="fa-solid fa-lock"></i> PROCEED TO CHECKOUT</a>
+        <a href="/catalog" class="btn btn-ghost btn-block btn-sm" style="margin-top:0.8rem">CONTINUE BROWSING</a>
+    </div>
+    <% } %>
+</div>
+<script>
+function updateQty(id, qty) {
+    if(qty<1) { removeItem(id); return; }
+    fetch('/api/cart/'+id, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({quantity:qty}) })
+    .then(r=>r.json()).then(d => { if(d.success) location.reload(); });
+}
+function removeItem(id) {
+    fetch('/api/cart/'+id, { method:'DELETE' }).then(r=>r.json()).then(d => { if(d.success) location.reload(); });
+}
+</script>
+<%- include('partials/footer') %>

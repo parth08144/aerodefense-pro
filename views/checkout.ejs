@@ -1,0 +1,66 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/pages.css">
+<div class="checkout-page animate-fade-in">
+    <h1 class="text-cyan" style="margin-bottom:2rem"><i class="fa-solid fa-lock"></i> SECURE CHECKOUT</h1>
+    <div class="checkout-grid">
+        <div>
+            <div class="checkout-form glass-panel">
+                <h2><i class="fa-solid fa-truck"></i> SHIPPING INTEL</h2>
+                <div class="form-group"><label>Full Name</label><input type="text" id="shipName" class="form-control" value="<%= user.full_name || '' %>" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Address</label><input type="text" id="shipAddress" class="form-control" placeholder="Delivery coordinates..." required></div>
+                    <div class="form-group"><label>City</label><input type="text" id="shipCity" class="form-control" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Country</label><input type="text" id="shipCountry" class="form-control" required></div>
+                    <div class="form-group"><label>Postal Code</label><input type="text" id="shipZip" class="form-control"></div>
+                </div>
+            </div>
+            <div class="checkout-form glass-panel" style="margin-top:1.5rem">
+                <h2><i class="fa-solid fa-credit-card"></i> PAYMENT DATA</h2>
+                <div class="payment-icons"><i class="fa-brands fa-cc-visa active"></i><i class="fa-brands fa-cc-mastercard"></i><i class="fa-brands fa-cc-amex"></i></div>
+                <div class="form-group"><label>Card Number</label><input type="text" id="cardNum" class="form-control" placeholder="4242 4242 4242 4242" maxlength="19" oninput="formatCard(this)" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Expiry</label><input type="text" id="cardExp" class="form-control" placeholder="MM/YY" maxlength="5" required></div>
+                    <div class="form-group"><label>CVV</label><input type="password" id="cardCvv" class="form-control" placeholder="•••" maxlength="4" required></div>
+                </div>
+                <button class="btn btn-amber btn-block btn-lg" onclick="processPayment()"><i class="fa-solid fa-rocket"></i> INITIATE PROCUREMENT — $<%= Math.round(total * 1.02).toLocaleString() %></button>
+            </div>
+        </div>
+        <div class="order-panel glass-panel">
+            <h3>ORDER SUMMARY (<%= items.length %> items)</h3>
+            <% items.forEach(i => { %>
+            <div class="order-item">
+                <span class="oi-name"><%= i.name %></span>
+                <span class="oi-qty">x<%= i.quantity %></span>
+                <span class="oi-price">$<%= (i.price * i.quantity).toLocaleString() %></span>
+            </div>
+            <% }) %>
+            <div class="summary-line" style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--glass-border)"><span>Subtotal</span><span>$<%= total.toLocaleString() %></span></div>
+            <div class="summary-line"><span>Insurance (2%)</span><span>$<%= Math.round(total*0.02).toLocaleString() %></span></div>
+            <div class="summary-line total"><span>Total</span><span>$<%= Math.round(total*1.02).toLocaleString() %></span></div>
+        </div>
+    </div>
+</div>
+<div class="processing-overlay" id="processingOverlay">
+    <div class="spinner"></div>
+    <p id="processingText">ENCRYPTING TRANSMISSION...</p>
+</div>
+<script>
+function formatCard(el) { el.value = el.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim(); }
+async function processPayment() {
+    const overlay = document.getElementById('processingOverlay');
+    const text = document.getElementById('processingText');
+    overlay.classList.add('active');
+    const steps = ['ENCRYPTING TRANSMISSION...','VERIFYING CREDENTIALS...','AUTHORIZING PAYMENT...','CONFIRMING ORDER...'];
+    for(let i=0;i<steps.length;i++) { text.textContent = steps[i]; await new Promise(r=>setTimeout(r,800)); }
+    const addr = [document.getElementById('shipName').value, document.getElementById('shipAddress').value, document.getElementById('shipCity').value, document.getElementById('shipCountry').value, document.getElementById('shipZip').value].join(', ');
+    try {
+        const res = await fetch('/api/orders', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ shipping_address:addr, payment_method:'card' })});
+        const data = await res.json();
+        if(data.success) { window.location = '/order-confirmation/' + data.orderId; }
+        else { overlay.classList.remove('active'); showToast(data.error || 'Payment failed','error'); }
+    } catch { overlay.classList.remove('active'); showToast('Connection error','error'); }
+}
+</script>
+<%- include('partials/footer') %>

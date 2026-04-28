@@ -1,0 +1,139 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/product.css">
+
+<div class="product-page animate-fade-in">
+    <div class="product-hero">
+        <div class="product-gallery">
+            <div class="main-image">
+                <div class="grid-overlay"></div>
+                <img src="<%= product.image_url %>" alt="<%= product.name %>" style="width:100%;height:100%;object-fit:cover;">
+            </div>
+        </div>
+
+        <div class="product-details">
+            <div class="product-category"><%= product.category.replace('-', ' ') %> // <%= product.classification || 'STANDARD' %></div>
+            <h1><%= product.name %></h1>
+            <div class="manufacturer-line">By <strong><%= product.manufacturer %></strong></div>
+            <div class="origin"><i class="fa-solid fa-globe"></i> <%= product.country_of_origin %> <% if(product.generation) { %> · <%= product.generation %><% } %></div>
+            <div class="status-line">
+                <span class="badge <%= product.status === 'available' ? 'badge-green' : product.status === 'pre-order' ? 'badge-amber' : 'badge-red' %>"><%= product.status.toUpperCase() %></span>
+                <span style="margin-left:8px;font-size:0.85rem;color:var(--text-muted)"><%= product.stock_quantity %> unit(s) in stock</span>
+            </div>
+            <div class="price-box">$<%= product.price.toLocaleString() %></div>
+            <div class="price-label">Unit acquisition cost (USD)</div>
+            <p class="description"><%= product.description %></p>
+
+            <div class="product-actions">
+                <div class="qty-control">
+                    <button onclick="changeQty(-1)">−</button>
+                    <input type="number" id="qty" value="1" min="1" max="<%= product.stock_quantity %>" readonly>
+                    <button onclick="changeQty(1)">+</button>
+                </div>
+                <button class="btn btn-primary btn-lg" onclick="addToCart(<%= product.id %>)"><i class="fa-solid fa-crosshairs"></i> ADD TO ARSENAL</button>
+                <button class="btn <%= inWishlist ? 'btn-amber' : 'btn-ghost' %>" id="wishBtn" onclick="toggleWishlist(<%= product.id %>)"><i class="fa-solid fa-heart"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <% if (Object.keys(specGroups).length > 0) { %>
+    <section class="specs-section">
+        <h2 class="section-title">TECHNICAL_SPECIFICATIONS</h2>
+        <div class="spec-groups">
+            <% for (const [group, specs] of Object.entries(specGroups)) { %>
+            <div class="spec-group glass-panel">
+                <h3><i class="fa-solid fa-database"></i> <%= group %></h3>
+                <table class="spec-table">
+                    <% specs.forEach(s => { %>
+                    <tr><td><%= s.spec_key %></td><td><%= s.spec_value %><% if(s.spec_unit) { %> <%= s.spec_unit %><% } %></td></tr>
+                    <% }) %>
+                </table>
+            </div>
+            <% } %>
+        </div>
+    </section>
+    <% } %>
+
+    <section class="reviews-section">
+        <h2 class="section-title">FIELD_REPORTS</h2>
+        <div class="review-summary glass-panel">
+            <div class="review-avg"><%= avgReview.avg ? (Math.round(avgReview.avg*10)/10) : '—' %></div>
+            <div>
+                <div class="stars">
+                    <% for(let i=1;i<=5;i++) { %><i class="fa-solid fa-star <%= i <= Math.round(avgReview.avg||0) ? 'filled' : '' %>"></i><% } %>
+                </div>
+                <div style="color:var(--text-secondary);font-size:0.9rem;margin-top:4px"><%= avgReview.count %> review(s)</div>
+            </div>
+        </div>
+
+        <% reviews.forEach(r => { %>
+        <div class="review-card glass-panel">
+            <div class="review-header">
+                <span class="review-user"><i class="fa-solid fa-user"></i> <%= r.full_name || r.username %></span>
+                <span class="review-date"><%= new Date(r.created_at).toLocaleDateString() %></span>
+            </div>
+            <div class="stars" style="margin-bottom:0.5rem">
+                <% for(let i=1;i<=5;i++) { %><i class="fa-solid fa-star <%= i <= r.rating ? 'filled' : '' %>"></i><% } %>
+            </div>
+            <% if(r.title) { %><div class="review-title"><%= r.title %></div><% } %>
+            <div class="review-text"><%= r.comment %></div>
+        </div>
+        <% }) %>
+
+        <% if (user) { %>
+        <div class="review-form glass-panel">
+            <h3 style="margin-bottom:1rem;color:var(--accent-amber)">SUBMIT FIELD REPORT</h3>
+            <div class="form-group">
+                <label>Rating</label>
+                <div class="stars" id="ratingStars" style="font-size:1.5rem;cursor:pointer">
+                    <% for(let i=1;i<=5;i++) { %><i class="fa-solid fa-star" data-val="<%= i %>" onclick="setRating(<%= i %>)"></i><% } %>
+                </div>
+            </div>
+            <div class="form-group"><label>Title</label><input type="text" id="reviewTitle" class="form-control" placeholder="Report title..."></div>
+            <div class="form-group"><label>Comment</label><textarea id="reviewComment" class="form-control" placeholder="Operational feedback..."></textarea></div>
+            <button class="btn btn-primary" onclick="submitReview(<%= product.id %>)"><i class="fa-solid fa-paper-plane"></i> TRANSMIT</button>
+        </div>
+        <% } %>
+    </section>
+
+    <% if (related.length > 0) { %>
+    <section class="related-section">
+        <h2 class="section-title">RELATED_ASSETS</h2>
+        <div class="related-grid">
+            <% related.forEach(r => { %>
+            <a href="/product/<%= r.slug %>" class="product-card glass-panel" style="text-decoration:none">
+                <div class="card-image" style="height:160px">
+                    <img src="<%= r.image_url %>" alt="<%= r.name %>" style="width:100%;height:100%;object-fit:cover;">
+                </div>
+                <div class="card-body"><h3 style="font-size:0.95rem"><%= r.name %></h3><div class="card-price" style="font-size:1rem">$<%= r.price.toLocaleString() %></div></div>
+            </a>
+            <% }) %>
+        </div>
+    </section>
+    <% } %>
+</div>
+
+<script>
+let selectedRating = 0;
+function setRating(v) { selectedRating = v; document.querySelectorAll('#ratingStars i').forEach((s,i) => s.classList.toggle('filled', i < v)); }
+function changeQty(d) { const q = document.getElementById('qty'); q.value = Math.max(1, Math.min(parseInt(q.value)+d, parseInt(q.max))); }
+function addToCart(pid) {
+    const qty = parseInt(document.getElementById('qty').value);
+    fetch('/api/cart', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({product_id:pid, quantity:qty}) })
+    .then(r => { if(r.status===401) { window.location='/login'; return; } return r.json(); })
+    .then(d => { if(d?.success) { showToast('ASSET ADDED TO ARSENAL', 'success'); updateCartBadge(d.cartCount); } else if(d?.error) showToast(d.error, 'error'); });
+}
+function toggleWishlist(pid) {
+    const btn = document.getElementById('wishBtn');
+    const isIn = btn.classList.contains('btn-amber');
+    fetch('/api/wishlist' + (isIn ? '/'+pid : ''), { method: isIn?'DELETE':'POST', headers:{'Content-Type':'application/json'}, body: isIn?undefined:JSON.stringify({product_id:pid}) })
+    .then(r => { if(r.status===401) { window.location='/login'; return; } return r.json(); })
+    .then(d => { if(d?.success) { btn.classList.toggle('btn-amber'); btn.classList.toggle('btn-ghost'); showToast(isIn?'Removed from wishlist':'Added to wishlist','success'); }});
+}
+function submitReview(pid) {
+    if(!selectedRating) { showToast('Select a rating', 'error'); return; }
+    fetch('/api/reviews', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ product_id:pid, rating:selectedRating, title:document.getElementById('reviewTitle').value, comment:document.getElementById('reviewComment').value })})
+    .then(r=>r.json()).then(d => { if(d.success) { showToast('Review submitted!','success'); setTimeout(()=>location.reload(),1000); } else showToast(d.error,'error'); });
+}
+</script>
+
+<%- include('partials/footer') %>

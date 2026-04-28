@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Database files (regenerated via seed)
+database/*.db
+database/*.db-shm
+database/*.db-wal
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*

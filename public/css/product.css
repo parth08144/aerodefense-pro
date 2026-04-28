@@ -1,0 +1,46 @@
+.product-page { padding: 2rem 4%; max-width: 1280px; margin: 0 auto; }
+.product-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+.product-gallery { position: relative; border-radius: var(--radius-md); overflow: hidden; }
+.product-gallery .main-image { width: 100%; height: 450px; background: var(--bg-deep); display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border); border-radius: var(--radius-md); overflow: hidden; position: relative; }
+.product-gallery .main-image img { width: 100%; height: 100%; object-fit: cover; }
+.product-gallery .main-image .grid-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,229,255,0.03) 2px, rgba(0,229,255,0.03) 4px); pointer-events: none; }
+.product-gallery .main-image .placeholder-icon { font-size: 5rem; color: var(--text-muted); }
+.product-details { display: flex; flex-direction: column; }
+.product-details .product-category { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; }
+.product-details h1 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+.product-details .manufacturer-line { font-size: 1rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.product-details .manufacturer-line strong { color: var(--accent-cyan); }
+.product-details .origin { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+.product-details .price-box { font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800; color: var(--accent-amber); text-shadow: 0 0 20px rgba(255,149,0,0.3); margin-bottom: 0.5rem; }
+.product-details .price-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
+.product-details .status-line { margin-bottom: 1.5rem; }
+.product-details .description { color: var(--text-secondary); line-height: 1.8; margin-bottom: 2rem; font-size: 1rem; }
+.product-actions { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+.product-actions .qty-control { display: flex; align-items: center; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); overflow: hidden; }
+.product-actions .qty-control button { width: 40px; height: 44px; background: rgba(0,0,0,0.3); border: none; color: var(--accent-cyan); font-size: 1.2rem; cursor: pointer; }
+.product-actions .qty-control button:hover { background: rgba(0,229,255,0.1); }
+.product-actions .qty-control input { width: 50px; text-align: center; background: transparent; border: none; color: var(--text-primary); font-family: var(--font-heading); font-size: 1rem; }
+
+.specs-section { margin-bottom: 3rem; }
+.specs-section h2 { margin-bottom: 2rem; }
+.spec-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+.spec-group { padding: 1.5rem; }
+.spec-group h3 { font-size: 0.9rem; color: var(--accent-amber); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+
+.reviews-section { margin-bottom: 3rem; }
+.reviews-section h2 { margin-bottom: 1rem; }
+.review-summary { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; padding: 1.5rem; }
+.review-avg { font-family: var(--font-heading); font-size: 3rem; font-weight: 800; color: var(--accent-amber); }
+.review-card { padding: 1.5rem; margin-bottom: 1rem; }
+.review-card .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.review-card .review-user { font-family: var(--font-heading); font-size: 0.85rem; color: var(--accent-cyan); }
+.review-card .review-date { font-size: 0.8rem; color: var(--text-muted); }
+.review-card .review-title { font-weight: 600; margin-bottom: 0.5rem; }
+.review-card .review-text { color: var(--text-secondary); font-size: 0.95rem; }
+.review-form { padding: 2rem; margin-top: 1.5rem; }
+
+.related-section { margin-bottom: 3rem; }
+.related-section h2 { margin-bottom: 1.5rem; }
+.related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
+
+@media (max-width: 900px) { .product-hero { grid-template-columns: 1fr; } }

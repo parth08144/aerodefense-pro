@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <meta name="description" content="AeroDefense Pro — The world's premier classified defense marketplace for fighter jets, missiles, and defense systems.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/animations.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <a href="/" class="nav-logo">
+            <span class="logo-bracket">⟨</span> AERODEFENSE <span class="logo-text">PRO</span> <span class="logo-bracket">⟩</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="/">HOME</a></li>
+            <li><a href="/catalog">CATALOG</a></li>
+            <li><a href="/about">ABOUT</a></li>
+            <% if (user) { %>
+                <li><a href="/wishlist"><i class="fa-solid fa-heart"></i> WISHLIST</a></li>
+                <li><a href="/cart" class="nav-cart"><i class="fa-solid fa-crosshairs"></i> CART <% if (cartCount > 0) { %><span class="cart-count" id="cartBadge"><%= cartCount %></span><% } %></a></li>
+                <li><a href="/profile" class="nav-user-btn"><i class="fa-solid fa-user"></i> <%= user.username.toUpperCase() %></a></li>
+                <li><a href="#" class="nav-user-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i></a></li>
+            <% } else { %>
+                <li><a href="/login" class="nav-user-btn"><i class="fa-solid fa-lock"></i> LOGIN</a></li>
+                <li><a href="/signup" class="btn btn-primary btn-sm">ENLIST</a></li>
+            <% } %>
+        </ul>
+        <button class="mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+    <div class="toast-container" id="toastContainer"></div>
+    <main>

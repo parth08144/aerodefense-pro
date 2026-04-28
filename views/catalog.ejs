@@ -1,0 +1,130 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/catalog.css">
+
+<div class="catalog-page">
+    <aside class="catalog-sidebar">
+        <div class="filter-panel glass-panel">
+            <h3><i class="fa-solid fa-filter"></i> FILTERS</h3>
+            <div class="filter-group">
+                <label>Category</label>
+                <select id="filterCategory">
+                    <option value="">All Categories</option>
+                    <option value="fighter-jet" <%= category === 'fighter-jet' ? 'selected' : '' %>>Fighter Jets</option>
+                    <option value="missile" <%= category === 'missile' ? 'selected' : '' %>>Missiles</option>
+                    <option value="defense-system" <%= category === 'defense-system' ? 'selected' : '' %>>Defense Systems</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Manufacturer</label>
+                <select id="filterMfr">
+                    <option value="">All Manufacturers</option>
+                    <% manufacturers.forEach(m => { %><option value="<%= m.manufacturer %>"><%= m.manufacturer %></option><% }) %>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Generation</label>
+                <select id="filterGen">
+                    <option value="">All Generations</option>
+                    <% generations.forEach(g => { %><option value="<%= g.generation %>"><%= g.generation %></option><% }) %>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Status</label>
+                <select id="filterStatus">
+                    <option value="">All</option>
+                    <option value="available">Available</option>
+                    <option value="pre-order">Pre-Order</option>
+                    <option value="classified">Classified</option>
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button class="btn btn-primary btn-sm btn-block" onclick="applyFilters()"><i class="fa-solid fa-crosshairs"></i> APPLY</button>
+                <button class="btn btn-ghost btn-sm" onclick="resetFilters()">RESET</button>
+            </div>
+        </div>
+    </aside>
+
+    <div class="catalog-main">
+        <div class="catalog-header">
+            <h1 class="text-cyan">ARSENAL CATALOG</h1>
+            <div class="catalog-controls">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Search assets..." class="form-control">
+                </div>
+                <select id="sortSelect" class="form-control" style="width:auto" onchange="applyFilters()">
+                    <option value="featured">Featured</option>
+                    <option value="price-asc">Price: Low → High</option>
+                    <option value="price-desc">Price: High → Low</option>
+                    <option value="name">Name: A → Z</option>
+                    <option value="newest">Newest</option>
+                </select>
+            </div>
+        </div>
+        <div class="product-grid" id="productGrid">
+            <div style="text-align:center;padding:3rem;color:var(--text-muted)"><i class="fa-solid fa-spinner fa-spin" style="font-size:2rem"></i><p style="margin-top:1rem">Loading assets...</p></div>
+        </div>
+    </div>
+</div>
+
+<script>
+let searchTimer;
+document.getElementById('searchInput').addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(applyFilters, 300);
+});
+
+function applyFilters() {
+    const params = new URLSearchParams();
+    const cat = document.getElementById('filterCategory').value;
+    const mfr = document.getElementById('filterMfr').value;
+    const gen = document.getElementById('filterGen').value;
+    const status = document.getElementById('filterStatus').value;
+    const sort = document.getElementById('sortSelect').value;
+    const search = document.getElementById('searchInput').value;
+    if (cat) params.set('category', cat);
+    if (mfr) params.set('manufacturer', mfr);
+    if (gen) params.set('generation', gen);
+    if (status) params.set('status', status);
+    if (sort) params.set('sort', sort);
+    if (search) params.set('search', search);
+
+    fetch('/api/products?' + params.toString())
+        .then(r => r.json())
+        .then(data => renderProducts(data.products))
+        .catch(() => document.getElementById('productGrid').innerHTML = '<div class="no-results"><i class="fa-solid fa-triangle-exclamation"></i><p>Failed to load assets</p></div>');
+}
+
+function renderProducts(products) {
+    const grid = document.getElementById('productGrid');
+    if (!products.length) { grid.innerHTML = '<div class="no-results"><i class="fa-solid fa-ban"></i><h3>NO ASSETS FOUND</h3><p>Adjust filters or search terms</p></div>'; return; }
+    grid.innerHTML = products.map(p => `
+        <a href="/product/${p.slug}" class="product-card glass-panel" style="text-decoration:none">
+            <div class="card-image">
+                <img src="${p.image_url}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+                <div class="target-reticle"></div>
+                <div class="status-badge"><span class="badge ${p.status==='available'?'badge-green':p.status==='pre-order'?'badge-amber':'badge-red'}">${p.status.toUpperCase()}</span></div>
+            </div>
+            <div class="card-body">
+                <h3>${p.name}</h3>
+                <div class="card-manufacturer">${p.manufacturer}</div>
+                <div class="card-price">$${Number(p.price).toLocaleString()}</div>
+            </div>
+        </a>
+    `).join('');
+}
+
+function resetFilters() {
+    document.getElementById('filterCategory').value = '';
+    document.getElementById('filterMfr').value = '';
+    document.getElementById('filterGen').value = '';
+    document.getElementById('filterStatus').value = '';
+    document.getElementById('searchInput').value = '';
+    document.getElementById('sortSelect').value = 'featured';
+    applyFilters();
+}
+
+applyFilters();
+</script>
+
+<%- include('partials/footer') %>

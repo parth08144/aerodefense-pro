@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/pages.css">
+<div class="profile-page animate-fade-in">
+    <div class="profile-header glass-panel">
+        <div class="profile-avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+        <div class="profile-info">
+            <h1><%= fullUser.full_name || fullUser.username %></h1>
+            <p>@<%= fullUser.username %> · <%= fullUser.email %></p>
+            <div class="profile-stats">
+                <div class="ps"><div class="ps-num"><%= orderCount %></div><div class="ps-label">Orders</div></div>
+                <div class="ps"><div class="ps-num"><%= wishCount %></div><div class="ps-label">Wishlist</div></div>
+            </div>
+        </div>
+    </div>
+    <div class="profile-form glass-panel">
+        <h2 class="text-amber">UPDATE PROFILE</h2>
+        <form onsubmit="return updateProfile(event)">
+            <div class="form-group"><label>Full Name</label><input type="text" id="pName" class="form-control" value="<%= fullUser.full_name || '' %>"></div>
+            <div class="form-group"><label>Phone</label><input type="text" id="pPhone" class="form-control" value="<%= fullUser.phone || '' %>"></div>
+            <div class="form-group"><label>Address</label><input type="text" id="pAddr" class="form-control" value="<%= fullUser.address || '' %>"></div>
+            <div class="form-group"><label>City</label><input type="text" id="pCity" class="form-control" value="<%= fullUser.city || '' %>"></div>
+            <div class="form-group"><label>Country</label><input type="text" id="pCountry" class="form-control" value="<%= fullUser.country || '' %>"></div>
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> SAVE CHANGES</button>
+        </form>
+    </div>
+</div>
+<script>
+async function updateProfile(e) {
+    e.preventDefault();
+    const res = await fetch('/api/auth/profile', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ full_name:document.getElementById('pName').value, phone:document.getElementById('pPhone').value, address:document.getElementById('pAddr').value, city:document.getElementById('pCity').value, country:document.getElementById('pCountry').value })});
+    const d = await res.json();
+    if(d.success) showToast('Profile updated!','success'); else showToast(d.error,'error');
+    return false;
+}
+</script>
+<%- include('partials/footer') %>

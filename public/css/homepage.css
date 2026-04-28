@@ -1,0 +1,52 @@
+/* Hero */
+.hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; padding: 0 6%; }
+.hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+.hero-bg canvas { width: 100%; height: 100%; }
+.hero-radar { position: absolute; top: 50%; left: 50%; width: 150vw; height: 150vw; transform: translate(-50%,-50%); border-radius: 50%; z-index: 0; pointer-events: none; opacity: 0.08; }
+.hero-radar .sweep { width: 50%; height: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--accent-cyan) 100%); transform-origin: bottom right; animation: radarSpin 4s linear infinite; }
+.hero-hud { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; font-family: var(--font-heading); color: var(--accent-cyan); font-size: 0.75rem; letter-spacing: 1px; opacity: 0.5; z-index: 1; }
+.hud-tl { position: absolute; top: 90px; left: 30px; }
+.hud-tr { position: absolute; top: 90px; right: 30px; }
+.hud-bl { position: absolute; bottom: 30px; left: 30px; }
+.hud-br { position: absolute; bottom: 30px; right: 30px; color: var(--accent-green); }
+.hero-content { position: relative; z-index: 10; max-width: 750px; animation: fadeInUp 1s ease-out; }
+.hero-badge { background: var(--accent-green-dim); color: var(--accent-green); padding: 4px 12px; border: 1px solid rgba(0,255,106,0.3); font-family: var(--font-heading); font-size: 0.7rem; border-radius: 2px; display: inline-block; margin-bottom: 1rem; letter-spacing: 2px; }
+.hero-subtitle { font-size: 1.2rem; color: var(--text-secondary); letter-spacing: 5px; margin-bottom: 1rem; font-weight: 400; }
+.hero-title { font-size: 4rem; font-weight: 900; margin-bottom: 0.5rem; position: relative; }
+.hero-title .glitch { position: relative; }
+.hero-title .glitch::before, .hero-title .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.hero-title .glitch::before { left: 2px; text-shadow: -2px 0 var(--accent-red); animation: glitch1 3s infinite linear alternate-reverse; }
+.hero-title .glitch::after { left: -2px; text-shadow: 2px 0 var(--accent-cyan); animation: glitch2 2.5s infinite linear alternate-reverse; }
+.hero-tagline { font-family: var(--font-heading); font-size: 0.85rem; color: var(--accent-amber); letter-spacing: 3px; margin-bottom: 1.5rem; }
+.hero-desc { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2.5rem; max-width: 600px; line-height: 1.7; }
+.hero-actions { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+
+/* Featured */
+.featured-section { padding: 5rem 4%; }
+.products-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; margin-top: 1rem; }
+
+/* Categories */
+.categories-section { padding: 5rem 4%; }
+.cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.cat-card {
+    padding: 3rem 2rem; text-align: center; transition: transform 0.3s, border-color 0.3s;
+    display: flex; flex-direction: column; align-items: center; gap: 1rem; text-decoration: none;
+}
+.cat-card:hover { transform: translateY(-5px); border-color: var(--accent-cyan); }
+.cat-card i { font-size: 3rem; color: var(--accent-cyan); margin-bottom: 0.5rem; }
+.cat-card h3 { font-size: 1.2rem; color: var(--text-primary); }
+.cat-card p { color: var(--text-secondary); font-size: 0.9rem; }
+.cat-card .cat-count { font-family: var(--font-heading); font-size: 2rem; color: var(--accent-amber); font-weight: 700; }
+
+/* Stats */
+.stats-section { padding: 4rem 4%; }
+.stats-row { display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; }
+.stat-item { text-align: center; }
+.stat-item .stat-num { font-family: var(--font-heading); font-size: 3rem; font-weight: 800; color: var(--accent-cyan); line-height: 1; }
+.stat-item .stat-label { font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin-top: 0.5rem; }
+
+@media (max-width: 900px) {
+    .hero-title { font-size: 2.5rem; }
+    .cat-grid { grid-template-columns: 1fr; }
+    .stats-row { gap: 2rem; }
+}

@@ -1,0 +1,28 @@
+/* Catalog Page */
+.catalog-page { padding: 2rem 4%; display: grid; grid-template-columns: 280px 1fr; gap: 2rem; }
+.catalog-sidebar { position: sticky; top: 90px; height: fit-content; }
+.filter-panel { padding: 1.5rem; margin-bottom: 1.5rem; }
+.filter-panel h3 { font-size: 0.9rem; color: var(--accent-amber); margin-bottom: 1.2rem; letter-spacing: 2px; }
+.filter-group { margin-bottom: 1.5rem; }
+.filter-group label { display: block; font-family: var(--font-heading); font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.5rem; letter-spacing: 1px; text-transform: uppercase; }
+.filter-group select, .filter-group input[type="text"] {
+    width: 100%; padding: 8px 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
+    color: var(--text-primary); font-family: var(--font-body); font-size: 0.9rem; border-radius: var(--radius-sm);
+}
+.filter-group select option { background: var(--bg-panel); }
+.filter-group input[type="range"] { width: 100%; accent-color: var(--accent-cyan); }
+.filter-group .range-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); }
+.filter-actions { display: flex; gap: 0.5rem; }
+.catalog-main { }
+.catalog-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+.catalog-header h1 { font-size: 1.8rem; }
+.catalog-controls { display: flex; gap: 1rem; align-items: center; }
+.catalog-controls select { padding: 8px 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); color: var(--text-primary); font-size: 0.85rem; border-radius: var(--radius-sm); }
+.catalog-controls select option { background: var(--bg-panel); }
+.search-box { position: relative; }
+.search-box input { padding: 8px 12px 8px 36px; width: 250px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); color: var(--text-primary); font-size: 0.9rem; border-radius: var(--radius-sm); }
+.search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+.no-results { text-align: center; padding: 4rem 2rem; color: var(--text-secondary); }
+.no-results i { font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem; display: block; }
+@media (max-width: 900px) { .catalog-page { grid-template-columns: 1fr; } .catalog-sidebar { position: static; } }

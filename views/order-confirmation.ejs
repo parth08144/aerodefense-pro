@@ -1,0 +1,24 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/pages.css">
+<div class="confirmation-page animate-fade-up">
+    <div class="check-icon"><i class="fa-solid fa-circle-check"></i></div>
+    <h1>PROCUREMENT CONFIRMED</h1>
+    <p class="text-muted" style="margin-bottom:0.5rem">Your order has been successfully processed.</p>
+    <div class="order-num">ORDER: <%= order.order_number %></div>
+    <div class="confirmation-details glass-panel">
+        <div class="summary-line"><span>Status</span><span class="badge badge-green"><%= order.status.toUpperCase() %></span></div>
+        <div class="summary-line"><span>Payment</span><span class="badge badge-green"><%= order.payment_status.toUpperCase() %></span></div>
+        <div class="summary-line"><span>Total</span><span style="color:var(--accent-amber);font-family:var(--font-heading)">$<%= order.total_amount.toLocaleString() %></span></div>
+        <div class="summary-line"><span>Date</span><span><%= new Date(order.created_at).toLocaleDateString() %></span></div>
+        <hr style="border-color:var(--glass-border);margin:1rem 0">
+        <h4 style="font-size:0.85rem;color:var(--accent-amber);margin-bottom:1rem">ITEMS ORDERED</h4>
+        <% items.forEach(i => { %>
+        <div class="summary-line"><span><%= i.name %> × <%= i.quantity %></span><span>$<%= (i.unit_price * i.quantity).toLocaleString() %></span></div>
+        <% }) %>
+    </div>
+    <div style="display:flex;gap:1rem;justify-content:center;margin-top:1.5rem">
+        <a href="/orders" class="btn btn-primary"><i class="fa-solid fa-list"></i> VIEW ORDERS</a>
+        <a href="/catalog" class="btn btn-ghost"><i class="fa-solid fa-crosshairs"></i> CONTINUE BROWSING</a>
+    </div>
+</div>
+<%- include('partials/footer') %>

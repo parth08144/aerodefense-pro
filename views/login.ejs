@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/auth.css">
+<div class="auth-page">
+    <div class="bg-grid"></div>
+    <div class="auth-card glass-panel">
+        <h1 class="text-cyan">SECURE LOGIN</h1>
+        <div class="auth-subtitle">ESTABLISHING ENCRYPTED CONNECTION...</div>
+        <div class="auth-status" id="authStatus"></div>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <div class="form-group"><label>EMAIL / FREQ</label><input type="email" id="email" class="form-control" placeholder="operator@aerodefense.com" required></div>
+            <div class="form-group"><label>PASSWORD / CIPHER</label><input type="password" id="password" class="form-control" placeholder="Enter secure cipher..." required></div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg"><i class="fa-solid fa-lock-open"></i> AUTHENTICATE</button>
+        </form>
+        <div class="auth-footer">New operator? <a href="/signup">ENLIST NOW</a></div>
+    </div>
+</div>
+<script>
+async function handleLogin(e) {
+    e.preventDefault();
+    const status = document.getElementById('authStatus');
+    status.className = 'auth-status show'; status.textContent = 'AUTHENTICATING...';
+    try {
+        const res = await fetch('/api/auth/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ email:document.getElementById('email').value, password:document.getElementById('password').value })});
+        const data = await res.json();
+        if (data.success) { status.textContent = 'ACCESS GRANTED — REDIRECTING...'; status.classList.remove('error'); setTimeout(()=>window.location='/',800); }
+        else { status.textContent = data.error || 'ACCESS DENIED'; status.classList.add('error'); }
+    } catch { status.textContent = 'CONNECTION FAILED'; status.classList.add('error'); }
+    return false;
+}
+</script>
+<%- include('partials/footer') %>

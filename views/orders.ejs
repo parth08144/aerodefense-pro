@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/pages.css">
+<div class="orders-page animate-fade-in">
+    <h1 class="text-cyan" style="margin-bottom:2rem"><i class="fa-solid fa-clipboard-list"></i> ORDER HISTORY</h1>
+    <% if (orders.length === 0) { %>
+    <div class="cart-empty"><i class="fa-solid fa-inbox"></i><h2>NO ORDERS YET</h2><p class="text-muted">Your procurement history will appear here.</p><a href="/catalog" class="btn btn-primary" style="margin-top:1rem">BROWSE CATALOG</a></div>
+    <% } else { orders.forEach(o => { %>
+    <div class="order-row glass-panel">
+        <div class="order-num"><%= o.order_number %></div>
+        <div class="order-date"><%= new Date(o.created_at).toLocaleDateString() %></div>
+        <div><span class="badge <%= o.status==='confirmed'||o.status==='delivered'?'badge-green':o.status==='processing'?'badge-amber':'badge-cyan' %>"><%= o.status.toUpperCase() %></span></div>
+        <div class="order-total">$<%= o.total_amount.toLocaleString() %></div>
+        <a href="/order-confirmation/<%= o.id %>" class="btn btn-ghost btn-sm">VIEW</a>
+    </div>
+    <% }) } %>
+</div>
+<%- include('partials/footer') %>

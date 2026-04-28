@@ -1,0 +1,113 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/homepage.css">
+
+<section class="hero">
+    <div class="hero-radar"><div class="sweep"></div></div>
+    <div class="hero-hud">
+        <div class="hud-tl">ALT: <span id="hudAlt">35000</span>FT</div>
+        <div class="hud-tr">SPD: MACH <span id="hudSpd">2.5</span></div>
+        <div class="hud-bl">TGT: <span style="color:var(--accent-amber)">SCANNING...</span></div>
+        <div class="hud-br">SYS: ONLINE</div>
+    </div>
+    <div class="hero-content">
+        <div class="hero-badge">⬢ CLASSIFIED ACCESS GRANTED</div>
+        <div class="hero-subtitle">GLOBAL DEFENSE MARKETPLACE</div>
+        <h1 class="hero-title"><span class="glitch" data-text="AERODEFENSE">AERODEFENSE</span></h1>
+        <div class="hero-tagline">⟨ PRECISION STRIKE PROCUREMENT PLATFORM ⟩</div>
+        <p class="hero-desc">Access the world's most advanced fighter jets, precision missiles, and integrated defense systems. From 5th-gen stealth platforms to hypersonic strike weapons.</p>
+        <div class="hero-actions">
+            <a href="/catalog" class="btn btn-primary btn-lg"><i class="fa-solid fa-crosshairs"></i> BROWSE ARSENAL</a>
+            <a href="/about" class="btn btn-ghost btn-lg"><i class="fa-solid fa-satellite-dish"></i> MISSION BRIEFING</a>
+        </div>
+    </div>
+</section>
+
+<section class="featured-section">
+    <h2 class="section-title">FEATURED_ASSETS</h2>
+    <div class="products-row">
+        <% featured.forEach(product => { %>
+        <a href="/product/<%= product.slug %>" class="product-card glass-panel" style="text-decoration:none">
+            <div class="card-image">
+                <img src="<%= product.image_url %>" alt="<%= product.name %>" style="width:100%;height:100%;object-fit:cover;">
+                <div class="target-reticle"></div>
+                <div class="status-badge">
+                    <span class="badge <%= product.status === 'available' ? 'badge-green' : product.status === 'pre-order' ? 'badge-amber' : 'badge-red' %>"><%= product.status.toUpperCase() %></span>
+                </div>
+            </div>
+            <div class="card-body">
+                <h3><%= product.name %></h3>
+                <div class="card-manufacturer"><%= product.manufacturer %></div>
+                <div class="card-price">$<%= product.price.toLocaleString() %></div>
+            </div>
+        </a>
+        <% }) %>
+    </div>
+    <div style="text-align:center;margin-top:2.5rem">
+        <a href="/catalog" class="btn btn-primary"><i class="fa-solid fa-arrow-right"></i> VIEW FULL CATALOG</a>
+    </div>
+</section>
+
+<section class="categories-section">
+    <h2 class="section-title">CATEGORIES</h2>
+    <div class="cat-grid">
+        <a href="/catalog?category=fighter-jet" class="cat-card glass-panel">
+            <i class="fa-solid fa-jet-fighter"></i>
+            <h3>FIGHTER JETS</h3>
+            <p>Air Superiority Platforms</p>
+            <div class="cat-count"><%= counts.find(c => c.category === 'fighter-jet')?.count || 0 %></div>
+        </a>
+        <a href="/catalog?category=missile" class="cat-card glass-panel">
+            <i class="fa-solid fa-rocket"></i>
+            <h3>MISSILES</h3>
+            <p>Precision Strike Systems</p>
+            <div class="cat-count"><%= counts.find(c => c.category === 'missile')?.count || 0 %></div>
+        </a>
+        <a href="/catalog?category=defense-system" class="cat-card glass-panel">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h3>DEFENSE SYSTEMS</h3>
+            <p>Integrated Protection Suites</p>
+            <div class="cat-count"><%= counts.find(c => c.category === 'defense-system')?.count || 0 %></div>
+        </a>
+    </div>
+</section>
+
+<section class="stats-section">
+    <div class="stats-row">
+        <div class="stat-item"><div class="stat-num" data-count="<%= totalProducts %>">0</div><div class="stat-label">ASSETS AVAILABLE</div></div>
+        <div class="stat-item"><div class="stat-num" data-count="47">0</div><div class="stat-label">NATIONS SERVED</div></div>
+        <div class="stat-item"><div class="stat-num" data-count="12">0</div><div class="stat-label">MANUFACTURERS</div></div>
+        <div class="stat-item"><div class="stat-num" data-count="99">0</div><div class="stat-label">% UPTIME</div></div>
+    </div>
+</section>
+
+<script>
+// Counter animation
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.querySelectorAll('[data-count]').forEach(el => {
+                const target = parseInt(el.dataset.count);
+                let current = 0;
+                const step = Math.max(1, Math.floor(target / 60));
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) { current = target; clearInterval(timer); }
+                    el.textContent = current;
+                }, 30);
+            });
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.3 });
+document.querySelectorAll('.stats-row').forEach(el => observer.observe(el));
+
+// HUD flicker
+setInterval(() => {
+    const alt = document.getElementById('hudAlt');
+    const spd = document.getElementById('hudSpd');
+    if(alt) alt.textContent = 35000 + Math.floor(Math.random()*11) - 5;
+    if(spd) spd.textContent = (Math.random() > 0.5 ? '2.5' : '2.6');
+}, 1000);
+</script>
+
+<%- include('partials/footer') %>
